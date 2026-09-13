@@ -125,7 +125,7 @@ main {
     justify-content: center;
 }
 
-/* Creative photo layout: offset solid color shadow instead of blur */
+/* photo layout */
 .hero-photo img {
     width: 100%;
     max-width: 350px;

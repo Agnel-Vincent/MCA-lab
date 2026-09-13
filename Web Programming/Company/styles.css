@@ -1,0 +1,133 @@
+/* Beginner friendly CSS */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Times New Roman", Times, serif; /* No typical modern fonts */
+    background-color: #f4f9f4; /* Soft pastel green-white background */
+    color: #333333; /* Dark grey text for readability */
+}
+
+/* Header Section with Flexbox */
+header {
+    background-color: #bae1ff; /* Pastel Blue */
+    color: #333333;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo h1 {
+    margin: 0;
+    color: #333333;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: #333333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #ffffff;
+}
+
+/* Hero Section */
+.hero {
+    background-color: #ffffba; /* Pastel Yellow */
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero img {
+    max-width: 100%;
+    height: auto;
+    border: 5px solid #ffffff;
+}
+
+.tagline {
+    margin-top: 20px;
+}
+
+.tagline h2 {
+    color: #333333; 
+}
+
+/* Services Section with CSS Grid */
+.services {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.services h2 {
+    color: #333333;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for desktop */
+    gap: 20px;
+    margin-top: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.service-item {
+    background-color: #baffc9; /* Pastel Mint Green */
+    border: 3px solid #ffffff; 
+    padding: 20px;
+    border-radius: 10px; /* Slight rounding for a softer pastel look */
+}
+
+.service-item h3 {
+    color: #333333;
+    margin-top: 0;
+}
+
+/* Footer Section */
+footer {
+    background-color: #bae1ff; /* Pastel Blue */
+    color: #333333;
+    text-align: center;
+    padding: 20px;
+}
+
+footer h2 {
+    margin-top: 0;
+}
+
+/* Responsive Design using Media Queries */
+@media screen and (max-width: 600px) {
+    
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    nav ul li {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
