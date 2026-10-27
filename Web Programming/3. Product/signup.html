@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign up for your CHRONO ID — Manage hardware allocations, firmware releases, and local sync settings.">
+    <title>Sign Up | CHRONO 01</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Minimal Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="brand-logo" title="Return to Overview">
+                <span class="logo-mark">■</span>
+                <span class="logo-text">CHRONO <strong>01</strong></span>
+            </a>
+
+            <div class="header-action">
+                <a href="index.html" class="nav-back">← Back to Overview</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Authentication Area -->
+    <main class="auth-main">
+        <div class="auth-container">
+            <div class="auth-card">
+                <span class="auth-tag">// ACCOUNT REGISTRATION</span>
+                <h1 class="auth-title">Create your CHRONO ID</h1>
+                <p class="auth-subtitle">
+                    Register your writer profile to receive Batch 02 serial allocation, hardware dispatches, and firmware updates.
+                </p>
+
+                <!-- Form maps directly to index.html upon submission -->
+                <form action="index.html" method="get" class="signup-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="name" placeholder="e.g. Margaret Atwood" required autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" name="email" placeholder="author@domain.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" name="password" placeholder="At least 8 characters" required minlength="8">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="termsCheck" required checked>
+                        <label for="termsCheck">
+                            I agree to local-first data storage and zero-tracking privacy policy.
+                        </label>
+                    </div>
+
+                    <!-- Mapped to redirect back to home page (index.html) -->
+                    <button type="submit" class="btn-submit">
+                        Sign Up & Return Home →
+                    </button>
+
+                    <div class="auth-footer-nav">
+                        <span>Already registered?</span>
+                        <a href="index.html" class="auth-link">Sign In to Home</a>
+                    </div>
+                </form>
+
+                <div class="auth-meta-bar">
+                    <span>SECURITY: CLIENT-SIDE AES</span>
+                    <span>LOCAL-FIRST: 100%</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div class="footer-left">
+                <div class="footer-brand">
+                    <span class="logo-mark">■</span>
+                    <span>CHRONO LABORATORY</span>
+                </div>
+                <p class="footer-tagline">Dedicated machines for focused human thinking.</p>
+            </div>
+
+            <div class="footer-right">
+                <div class="footer-meta">
+                    <span>Designed for Clean Semantics & Responsive Layout</span>
+                </div>
+                <p class="footer-copy">&copy; 2026 CHRONO Hardware Systems Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
