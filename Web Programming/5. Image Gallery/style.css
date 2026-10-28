@@ -1,0 +1,725 @@
+/* ==========================================================================
+   MONOLITH // Architectural Photography & Spatial Archive
+   Style Philosophy: Modern Swiss Minimalist & Editorial Gallery
+   - No cliché AI purple/pink gradients or bloated drop shadows
+   - Pure structural hairlines, high-contrast typography, and clean grids
+   - Fluid responsive grid with precision hover zoom & shadow effects
+   - Obsidian darkroom slideshow viewer with auto-play and thumbnail strip
+   ========================================================================== */
+
+/* 1. Design Tokens & CSS Variables */
+:root {
+    /* Color Palette */
+    --bg-page: #F8F8F6;
+    --bg-surface: #FFFFFF;
+    --border-light: #E3E3DC;
+    --border-strong: #111113;
+    
+    --text-primary: #111113;
+    --text-secondary: #585854;
+    --text-muted: #888880;
+    --accent: #D93829; /* Architectural vermilion */
+
+    /* Modal / Darkroom Viewer Palette */
+    --modal-bg: #0C0D0E;
+    --modal-panel: #161719;
+    --modal-border: #26272C;
+    --modal-text: #F4F4F2;
+    --modal-text-dim: #8A8B90;
+
+    /* Typography */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    /* Transitions */
+    --trans-speed: 0.25s;
+    --trans-cubic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 2. Global Resets & Baseline */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Prevent body scroll when slideshow modal is active */
+body.modal-open {
+    overflow: hidden;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+}
+
+/* 3. Header & Masthead */
+.gallery-header {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-symbol {
+    font-size: 1.25rem;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.brand-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    margin-top: 0.15rem;
+}
+
+/* Header Controls & Filter Buttons */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.category-filters {
+    display: flex;
+    gap: 0.25rem;
+    background-color: var(--bg-page);
+    padding: 0.25rem;
+    border: 1px solid var(--border-light);
+}
+
+.filter-btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.8rem;
+    color: var(--text-secondary);
+    transition: all var(--trans-speed) ease;
+}
+
+.filter-btn:hover {
+    color: var(--text-primary);
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.filter-btn.active {
+    background-color: var(--border-strong);
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--border-strong);
+    color: #FFFFFF;
+    padding: 0.65rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    transition: background-color var(--trans-speed) ease;
+}
+
+.btn-action:hover {
+    background-color: var(--accent);
+}
+
+.btn-action .icon {
+    font-size: 0.75rem;
+}
+
+/* 4. Main Gallery Grid Container */
+.gallery-main {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.archive-meta-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+.meta-counter {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Seamless 1px Architectural Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1.5rem;
+}
+
+/* 5. Gallery Card Item & Hover Effects */
+.gallery-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--trans-speed) var(--trans-cubic),
+                box-shadow var(--trans-speed) var(--trans-cubic),
+                border-color var(--trans-speed) ease;
+}
+
+/* Hover Effect: Micro-lift and sharp architectural shadow */
+.gallery-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: 0 16px 32px -12px rgba(18, 18, 20, 0.15);
+}
+
+/* Image Visual Wrapper with Zoom Effect */
+.card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #EAEAEA;
+    overflow: hidden;
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--trans-cubic);
+}
+
+/* Hover Effect: Zoom into the image */
+.gallery-card:hover .card-img {
+    transform: scale(1.06);
+}
+
+/* Card Top Tag / Monospace Badge */
+.card-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background-color: rgba(18, 18, 20, 0.85);
+    color: #FFFFFF;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.5rem;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+}
+
+/* Card Information Details */
+.card-body {
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background-color: var(--bg-surface);
+}
+
+.card-index {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.card-meta-line {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border-light);
+    padding-top: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+/* 6. Slideshow / Lightbox Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--modal-bg);
+    color: var(--modal-text);
+    display: none; /* Controlled by JS */
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Top Bar */
+.modal-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--modal-border);
+    background-color: rgba(12, 13, 14, 0.95);
+    backdrop-filter: blur(8px);
+}
+
+.modal-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.modal-tag {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.modal-divider {
+    color: var(--modal-border);
+}
+
+.modal-title-top {
+    color: var(--modal-text-dim);
+    letter-spacing: 0.05em;
+}
+
+.modal-counter-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.counter-label {
+    color: var(--modal-text-dim);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+}
+
+.counter-digits {
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #FFFFFF;
+}
+
+.btn-modal-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--modal-text);
+    border: 1px solid var(--modal-border);
+    padding: 0.45rem 0.9rem;
+    transition: all var(--trans-speed) ease;
+}
+
+.btn-modal-close:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.key-shortcut {
+    color: var(--modal-text-dim);
+    font-size: 0.6875rem;
+}
+
+.btn-modal-close:hover .key-shortcut {
+    color: #FFFFFF;
+}
+
+/* Modal Stage & Viewport */
+.modal-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    position: relative;
+    overflow: hidden;
+    gap: 1.5rem;
+}
+
+/* Navigation Arrow Buttons */
+.nav-arrow {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--modal-panel);
+    border: 1px solid var(--modal-border);
+    color: #FFFFFF;
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all var(--trans-speed) ease;
+    user-select: none;
+}
+
+.nav-arrow:hover {
+    background-color: #FFFFFF;
+    color: var(--border-strong);
+    border-color: #FFFFFF;
+}
+
+.nav-arrow:active {
+    transform: scale(0.96);
+}
+
+/* Slide Content Frame */
+.slide-frame {
+    flex: 1;
+    height: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-visual-wrapper {
+    position: relative;
+    width: 100%;
+    max-height: 58vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #070708;
+    border: 1px solid var(--modal-border);
+    overflow: hidden;
+}
+
+.slide-image {
+    max-width: 100%;
+    max-height: 58vh;
+    object-fit: contain;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Fade animation on slide change */
+.slide-image.changing {
+    opacity: 0;
+    transform: scale(0.98);
+}
+
+/* Slide Caption Bar */
+.slide-caption-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding-top: 1rem;
+}
+
+.caption-text-block {
+    flex: 1;
+}
+
+.caption-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin-bottom: 0.25rem;
+}
+
+.caption-desc {
+    font-size: 0.875rem;
+    color: var(--modal-text-dim);
+    line-height: 1.4;
+    max-width: 600px;
+}
+
+.caption-metadata {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.meta-pill {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--modal-border);
+    color: var(--modal-text-dim);
+}
+
+/* Auto-Play Linear Progress Bar */
+.autoplay-track {
+    width: 100%;
+    height: 3px;
+    background-color: var(--modal-panel);
+    position: relative;
+    overflow: hidden;
+}
+
+.autoplay-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent);
+    transition: width 0.05s linear;
+}
+
+/* Modal Bottom Bar: Auto-play & Thumbnails */
+.modal-bottombar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.85rem 2rem;
+    background-color: var(--modal-panel);
+    border-top: 1px solid var(--modal-border);
+}
+
+.autoplay-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.btn-autoplay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    padding: 0.5rem 0.85rem;
+    background-color: #0C0D0E;
+    color: #FFFFFF;
+    border: 1px solid var(--modal-border);
+    transition: all var(--trans-speed) ease;
+}
+
+.btn-autoplay:hover {
+    border-color: #FFFFFF;
+}
+
+.btn-autoplay.active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.play-icon {
+    font-size: 0.75rem;
+}
+
+.autoplay-speed-indicator {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--modal-text-dim);
+    letter-spacing: 0.05em;
+}
+
+/* Thumbnail Strip */
+.thumbnail-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.25rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--modal-border) transparent;
+}
+
+.thumb-item {
+    width: 52px;
+    height: 38px;
+    border: 1px solid var(--modal-border);
+    opacity: 0.45;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: all var(--trans-speed) ease;
+}
+
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumb-item:hover {
+    opacity: 0.85;
+    border-color: #FFFFFF;
+}
+
+.thumb-item.active {
+    opacity: 1;
+    border-color: var(--accent);
+    border-width: 2px;
+    transform: translateY(-2px);
+}
+
+/* 7. Footer */
+.gallery-footer {
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-light);
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.footer-shortcuts code {
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-light);
+    padding: 0.15rem 0.35rem;
+    color: var(--text-primary);
+}
+
+/* 8. Responsive Design */
+@media (max-width: 900px) {
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1.25rem;
+    }
+
+    .header-controls {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .gallery-main {
+        padding: 1.25rem;
+    }
+
+    .modal-topbar {
+        padding: 0.75rem 1rem;
+    }
+
+    .modal-stage {
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+    }
+
+    .nav-arrow {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.5rem;
+    }
+
+    .slide-visual-wrapper {
+        max-height: 48vh;
+    }
+
+    .slide-caption-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .modal-bottombar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .thumbnail-strip {
+        width: 100%;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1.25rem;
+    }
+}
+

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="MONOLITH // Architectural & Spatial Photography Archive. Interactive gallery with grid view, hover effects, and full slideshow engine.">
+    <title>MONOLITH — Spatial Photography Archive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- 1. Header / Architectural Curation Masthead -->
+    <header class="gallery-header">
+        <div class="header-inner">
+            <div class="brand">
+                <span class="brand-symbol">■</span>
+                <div>
+                    <h1 class="brand-title">MONOLITH</h1>
+                    <p class="brand-subtitle">SPATIAL & ARCHITECTURAL ARCHIVE // ED-05</p>
+                </div>
+            </div>
+
+            <!-- Controls: Category Filter and Slideshow Launch -->
+            <div class="header-controls">
+                <nav class="category-filters" aria-label="Exhibition categories">
+                    <button class="filter-btn active" data-filter="all">ALL [8]</button>
+                    <button class="filter-btn" data-filter="brutalism">BRUTALISM</button>
+                    <button class="filter-btn" data-filter="minimalism">MINIMALISM</button>
+                    <button class="filter-btn" data-filter="interiors">INTERIORS</button>
+                </nav>
+
+                <button id="startSlideshowBtn" class="btn-action">
+                    <span class="icon">▶</span>
+                    <span>START SLIDESHOW</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Main Gallery Grid Container -->
+    <main class="gallery-main">
+        <div class="archive-meta-strip">
+            <span class="meta-label">INDEX // WORKS EXHIBITED</span>
+            <span id="galleryCounter" class="meta-counter">SHOWING 8 OF 8 WORKS</span>
+        </div>
+
+        <!-- Grid Container populated by JavaScript -->
+        <section id="galleryGrid" class="gallery-grid" aria-label="Image gallery grid">
+            <!-- Dynamic exhibition cards injected via script.js -->
+        </section>
+    </main>
+
+    <!-- 3. Slideshow / Lightbox Modal -->
+    <div id="slideshowModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true"
+        aria-label="Fullscreen Slideshow Viewer">
+
+        <!-- Top Header Bar inside Modal -->
+        <div class="modal-topbar">
+            <div class="modal-meta">
+                <span class="modal-tag" id="modalTag">ARCHIVE ITEM</span>
+                <span class="modal-divider">/</span>
+                <span class="modal-title-top" id="modalTitleTop">EXHIBIT</span>
+            </div>
+
+            <div class="modal-counter-box">
+                <span class="counter-label">INDEX</span>
+                <span id="slideCounter" class="counter-digits">01 / 08</span>
+            </div>
+
+            <button id="closeModalBtn" class="btn-modal-close" aria-label="Close Slideshow (Escape)">
+                <span>CLOSE</span>
+                <span class="key-shortcut">[ESC]</span>
+            </button>
+        </div>
+
+        <!-- Central Slideshow Stage -->
+        <div class="modal-stage">
+            <!-- Previous Button -->
+            <button id="prevBtn" class="nav-arrow nav-prev" aria-label="Previous Slide (Left Arrow)">
+                <span class="arrow-symbol">‹</span>
+            </button>
+
+            <!-- Slide Content Frame -->
+            <div class="slide-frame">
+                <div class="slide-visual-wrapper">
+                    <img id="modalImage" class="slide-image" src="" alt="Exhibition Artwork" />
+                </div>
+
+                <div class="slide-caption-bar">
+                    <div class="caption-text-block">
+                        <h2 id="modalCaptionTitle" class="caption-title">Structure Title</h2>
+                        <p id="modalCaptionDescription" class="caption-desc">Structure Description</p>
+                    </div>
+                    <div class="caption-metadata">
+                        <span id="modalLocation" class="meta-pill">LOCATION</span>
+                        <span id="modalYear" class="meta-pill">YEAR</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Button -->
+            <button id="nextBtn" class="nav-arrow nav-next" aria-label="Next Slide (Right Arrow)">
+                <span class="arrow-symbol">›</span>
+            </button>
+        </div>
+
+        <!-- Auto-Play Progress Track (Displays time until next auto transition) -->
+        <div class="autoplay-track">
+            <div id="autoplayProgress" class="autoplay-progress-bar"></div>
+        </div>
+
+        <!-- Bottom Controls Bar & Thumbnail Strip -->
+        <div class="modal-bottombar">
+            <!-- Auto-Play Controls -->
+            <div class="autoplay-controls">
+                <button id="autoPlayToggleBtn" class="btn-autoplay">
+                    <span id="autoPlayIcon" class="play-icon">▶</span>
+                    <span id="autoPlayLabel">AUTO-PLAY: OFF</span>
+                </button>
+                <span class="autoplay-speed-indicator">INTERVAL: 4.0s</span>
+            </div>
+
+            <!-- Thumbnail Navigation Strip -->
+            <div id="thumbnailStrip" class="thumbnail-strip" aria-label="Slideshow thumbnails">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Site Footer -->
+    <footer class="gallery-footer">
+        <div class="footer-inner">
+            <p class="footer-brand">MONOLITH ARCHIVE // MCA WEB PROGRAMMING LAB</p>
+            <p class="footer-shortcuts">KEYBOARD SHORTCUTS: <code>[←]</code> PREV <code>[→]</code> NEXT <code>[SPACE]</code> PLAY/PAUSE <code>[ESC]</code> EXIT</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script src="script.js"></script>
+</body>
+
+</html>
+
