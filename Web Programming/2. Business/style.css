@@ -1,0 +1,447 @@
+
+
+/* ---- 1. Reset -------------------------------------------------
+   Browsers ship their own default spacing/sizing. We zero it out
+   once here so every page starts from the same baseline. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* padding/border count INSIDE the width we set */
+}
+
+/* ---- 2. Design tokens ------------------------------------------
+   Every colour and font in the site is declared once here as a
+   CSS variable. Change a value in this one place and it updates
+   everywhere it's used. */
+:root {
+  --paper:   #ede9e1; /* page background — warm, not stark white */
+  --ink:     #262220; /* primary text colour */
+  --oak:     #7c5430; /* brand brown — headings, links */
+  --sawdust: #cbb188; /* soft tan — panels, hover fills */
+  --rust:    #a63d2f; /* single accent colour, used sparingly */
+  --line:    #d6cbb8; /* hairline borders/dividers */
+
+  --font-head: "Bitter", Georgia, serif;
+  --font-body: "Karla", Arial, sans-serif;
+
+  --max-width: 1040px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+a {
+  color: var(--oak);
+}
+
+/* A single reusable "container" class keeps content from
+   stretching edge-to-edge on wide screens. Every section wraps
+   its inner content in one of these. */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---- 3. Header & nav --------------------------------------------
+   Flexbox handles the header row: logo on the left, nav on the
+   right, space pushed between them. */
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+}
+
+.logo {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.logo span {
+  color: var(--rust);
+}
+
+.nav-list {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.95rem;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent; /* reserve space so hover doesn't shift layout */
+  transition: border-color 0.15s ease;
+}
+
+.nav-list a:hover,
+.nav-list a[aria-current="page"] {
+  border-bottom-color: var(--rust);
+}
+
+.nav-toggle-checkbox {
+  display: none;
+}
+
+/* Hamburger button — hidden on desktop, shown only under the
+   mobile media query near the bottom of this file. */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  background: var(--ink);
+}
+
+/* ---- 4. Hero (home page) -----------------------------------------
+   CSS Grid splits the hero into two columns: text on the left,
+   a hand-drawn grain pattern on the right. On mobile this
+   collapses to one column (see media query). */
+.hero {
+  padding: 88px 0 72px;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+  max-width: 11ch;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  max-width: 46ch;
+  margin-bottom: 32px;
+  color: #4a423c;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.grain {
+  width: 100%;
+  height: auto;
+}
+
+/* ---- 5. Buttons / links styled as buttons ------------------------ */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-primary {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--paper);
+}
+
+.btn-primary:hover {
+  background: #8a3226;
+  border-color: #8a3226;
+}
+
+/* ---- 6. Generic section spacing + a reusable "row list" ----------
+   The row list is used for the services preview on the homepage
+   and the full services table on services.html: a heading, a
+   short line of text, separated by a hairline rule. No cards,
+   no rounded corners, no shadow — just a clean list, like a
+   price board on a workshop wall. */
+section {
+  padding: 64px 0;
+}
+
+section + section {
+  border-top: 1px solid var(--line);
+}
+
+.section-head {
+  margin-bottom: 40px;
+}
+
+.section-head h2 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.section-head p {
+  max-width: 56ch;
+  color: #4a423c;
+}
+
+.row-list {
+  list-style: none;
+}
+
+.row-list li {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row-list li:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.row-list h3 {
+  font-size: 1.15rem;
+}
+
+.row-list .meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--oak);
+}
+
+.row-list p {
+  color: #4a423c;
+}
+
+/* ---- 7. Pull quote (home page "why us") --------------------------- */
+.pull-quote {
+  border-left: 3px solid var(--rust);
+  padding-left: 28px;
+  max-width: 60ch;
+}
+
+.pull-quote p {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.pull-quote cite {
+  font-style: normal;
+  font-size: 0.9rem;
+  color: var(--oak);
+}
+
+/* ---- 8. Page header (services / about / contact) ------------------- */
+.page-head {
+  padding: 56px 0 8px;
+}
+
+.page-head h1 {
+  font-size: 2.1rem;
+  margin-bottom: 12px;
+}
+
+.page-head p {
+  max-width: 56ch;
+  color: #4a423c;
+}
+
+/* ---- 9. About page: values list ------------------------------------- */
+.values-list {
+  list-style: none;
+}
+
+.values-list li {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.values-list li:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.values-list h3 {
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.values-list p {
+  color: #4a423c;
+}
+
+/* ---- 10. Contact page: info block + form ----------------------------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 56px;
+}
+
+.contact-info h3 {
+  font-size: 1rem;
+  margin: 20px 0 4px;
+}
+
+.contact-info h3:first-child {
+  margin-top: 0;
+}
+
+.contact-info p {
+  color: #4a423c;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: var(--oak);
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+.form-field textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* ---- 11. Footer ------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 48px 0;
+}
+
+.footer-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.footer-grid .logo {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.footer-nav a {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  color: var(--oak);
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+/* ---- 12. Responsive: everything below 768px --------------------------
+   One media query at the bottom of the file, rather than scattered
+   throughout — easier to find and explain in one place. */
+@media (max-width: 768px) {
+  .hero .container {
+    grid-template-columns: 1fr;
+  }
+
+  .grain {
+    display: none; /* decorative only — drop it to save space on small screens */
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-list {
+    display: none;
+    position: absolute;
+    top: 84px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-toggle-checkbox:checked ~ nav .nav-list {
+    display: flex;
+  }
+
+  .nav-list li {
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-list a {
+    display: block;
+    padding: 16px 24px;
+  }
+
+  .site-header .container {
+    position: relative;
+  }
+
+  .row-list li,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}

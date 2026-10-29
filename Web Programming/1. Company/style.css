@@ -1,0 +1,245 @@
+/* =========================================================
+   THACHU WOODWORKS — single-page homepage
+   Same visual language as the multi-page site, rebuilt as one
+   self-contained page for the "responsive homepage with
+   Flexbox/Grid" brief. Order: reset -> tokens -> header ->
+   hero -> services (grid) -> footer -> media query.
+   ========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --paper:   #ede9e1;
+  --ink:     #262220;
+  --oak:     #7c5430;
+  --sawdust: #cbb188;
+  --rust:    #a63d2f;
+  --line:    #d6cbb8;
+
+  --font-head: "Bitter", Georgia, serif;
+  --font-body: "Karla", Arial, sans-serif;
+
+  --max-width: 1040px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--oak);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---- Header: Flexbox row, logo left / nav right ---- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+}
+
+.logo {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.logo span {
+  color: var(--rust);
+}
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;      /* lets links wrap instead of overflowing on narrow screens */
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.95rem;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.nav-list a:hover {
+  border-bottom-color: var(--rust);
+}
+
+/* ---- Hero: banner image (SVG) + tagline ---- */
+.hero {
+  position: relative;
+}
+
+.hero-banner {
+  display: block;
+  width: 100%;
+  height: 60px;
+}
+
+.hero-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 72px 24px 88px;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+
+.hero-content .tagline {
+  color: #4a423c;
+  margin-bottom: 28px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 26px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btn-primary {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--paper);
+}
+
+.btn-primary:hover {
+  background: #8a3226;
+  border-color: #8a3226;
+}
+
+/* ---- Services: CSS Grid, two columns down to one ---- */
+.services {
+  padding: 64px 0 72px;
+  border-top: 1px solid var(--line);
+}
+
+.section-head {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.section-head h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.section-head p {
+  color: #4a423c;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* two equal columns on desktop */
+  gap: 24px;
+}
+
+.service-tile {
+  border: 1px solid var(--line);
+  padding: 28px;
+}
+
+.service-tile h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.service-tile p {
+  color: #4a423c;
+}
+
+/* ---- Footer: Flexbox, three blocks side by side ---- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 48px 0 24px;
+}
+
+.footer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+
+.footer-grid .logo {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.footer-grid h3 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: var(--oak);
+}
+
+.footer-grid p {
+  color: #4a423c;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  color: var(--oak);
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+/* ---- Responsive: one media query for everything below 640px ---- */
+@media (max-width: 640px) {
+  .site-header .container {
+    flex-direction: column;
+    height: auto;
+    padding: 16px 24px;
+    gap: 12px;
+  }
+
+  .hero-content {
+    padding: 48px 20px 56px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.9rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr; /* stack service tiles on mobile */
+  }
+
+  .footer-grid {
+    flex-direction: column;
+  }
+}
