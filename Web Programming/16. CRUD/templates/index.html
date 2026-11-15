@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Application</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 26px;
+    }
+
+    .btn-create {
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #3498db;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .btn-create:hover {
+      background-color: #2980b9;
+    }
+
+    .record-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .record-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .record-content {
+      flex: 1;
+    }
+
+    .record-content h3 {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .record-content p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .record-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      background-color: #2ecc71;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .btn-edit:hover {
+      background-color: #27ae60;
+    }
+
+    .btn-delete {
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      background-color: #e74c3c;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b;
+    }
+
+    .no-records {
+      text-align: center;
+      padding: 40px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      color: #7f8c8d;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Record Management</h1>
+      <a href="/create" class="btn-create">+ Add New Record</a>
+    </header>
+
+    <div class="record-list">
+      {% if records %}
+        {% for record in records %}
+        <div class="record-card">
+          <div class="record-content">
+            <h3>{{ record['title'] }}</h3>
+            <p>{{ record['description'] }}</p>
+          </div>
+          <div class="record-actions">
+            <a href="/update/{{ record['id'] }}" class="btn-edit">Edit</a>
+            <form method="POST" action="/delete/{{ record['id'] }}" onsubmit="return confirm('Delete this record?');">
+              <button type="submit" class="btn-delete">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-records">No records found. Click "+ Add New Record" to create one.</div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
+

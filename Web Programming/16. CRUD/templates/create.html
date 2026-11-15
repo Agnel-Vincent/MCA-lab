@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Record</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3498db;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 11px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #3498db;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-cancel {
+      display: inline-block;
+      text-align: center;
+      padding: 11px 18px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #7f8c8d;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .btn-cancel:hover {
+      background-color: #636e72;
+    }
+
+    .msg {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .msg.error {
+      background-color: #fde8e8;
+      color: #c0392b;
+      border: 1px solid #f8b4b4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Add New Record</h1>
+
+    <div class="card">
+      {% if error %}
+      <div class="msg error">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST" action="/create">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" placeholder="Enter record title">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="Enter record description"></textarea>
+        </div>
+
+        <div class="btn-group">
+          <button type="submit">Save Record</button>
+          <a href="/" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+

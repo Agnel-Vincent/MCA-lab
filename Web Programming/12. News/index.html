@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Feed Application</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 25px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #2980b9;
+    }
+
+    .status-msg {
+      text-align: center;
+      font-size: 16px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      min-height: 24px;
+    }
+
+    .news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .news-card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .news-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background-color: #eee;
+    }
+
+    .news-card h3 {
+      font-size: 17px;
+      color: #2c3e50;
+      padding: 15px 15px 8px;
+      line-height: 1.3;
+    }
+
+    .news-desc {
+      font-size: 14px;
+      color: #666;
+      padding: 0 15px 12px;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .news-meta {
+      font-size: 12px;
+      color: #888;
+      padding: 10px 15px;
+      border-top: 1px solid #f0f0f0;
+      background-color: #fafbfc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Latest News Feed</h1>
+
+    <div class="controls">
+      <button id="refreshBtn">Refresh News</button>
+    </div>
+
+    <div id="statusMessage" class="status-msg"></div>
+    <div id="newsContainer" class="news-container"></div>
+  </div>
+
+  <script>
+    const newsContainer = document.getElementById("newsContainer");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const statusMessage = document.getElementById("statusMessage");
+
+    let currentOffset = 0;
+
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleDateString();
+    }
+
+    function displayArticles(articles) {
+      newsContainer.innerHTML = "";
+      if (!articles || articles.length === 0) {
+        statusMessage.textContent = "No news articles available.";
+        return;
+      }
+      statusMessage.textContent = "";
+
+      articles.forEach(function(article) {
+        const card = document.createElement("div");
+        card.className = "news-card";
+
+        const img = document.createElement("img");
+        img.src = article.urlToImage || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400";
+        img.alt = article.title || "News Image";
+        img.onerror = function() {
+          this.src = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400";
+        };
+
+        const title = document.createElement("h3");
+        title.textContent = article.title || "No Title";
+
+        const desc = document.createElement("p");
+        desc.className = "news-desc";
+        desc.textContent = article.description || "No description available.";
+
+        const meta = document.createElement("div");
+        meta.className = "news-meta";
+        const sourceName = article.source && article.source.name ? article.source.name : "News Source";
+        const publishedDate = article.publishedAt ? formatDate(article.publishedAt) : "";
+        meta.textContent = `${sourceName} • ${publishedDate}`;
+
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(meta);
+
+        newsContainer.appendChild(card);
+      });
+    }
+
+    async function fetchNews() {
+      try {
+        newsContainer.innerHTML = "";
+        statusMessage.textContent = "Loading latest news...";
+
+        const url = `https://api.spaceflightnewsapi.net/v4/articles/?limit=6&offset=${currentOffset}&_t=${Date.now()}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Failed to retrieve news articles.");
+        }
+
+        const data = await response.json();
+        const articles = data.results.map(function(item) {
+          return {
+            title: item.title,
+            description: item.summary,
+            urlToImage: item.image_url,
+            source: { name: item.news_site },
+            publishedAt: item.published_at
+          };
+        });
+
+        displayArticles(articles);
+
+        currentOffset = (currentOffset + 6) % 60;
+      } catch (error) {
+        newsContainer.innerHTML = "";
+        statusMessage.textContent = error.message;
+      }
+    }
+
+    refreshBtn.addEventListener("click", fetchNews);
+    fetchNews();
+  </script>
+</body>
+</html>

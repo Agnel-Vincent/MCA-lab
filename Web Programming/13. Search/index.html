@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Search with Debounce</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      background-color: #ffffff;
+    }
+
+    .search-box input:focus {
+      border-color: #3498db;
+    }
+
+    .status-msg {
+      text-align: center;
+      font-size: 15px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      min-height: 22px;
+    }
+
+    .results-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-card {
+      background-color: #ffffff;
+      padding: 18px 20px;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-card h3 {
+      font-size: 17px;
+      color: #2c3e50;
+      margin-bottom: 6px;
+    }
+
+    .result-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Live Search</h1>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Type to search (e.g., phone, laptop, watch)...">
+    </div>
+
+    <div id="statusMessage" class="status-msg"></div>
+    <div id="resultsContainer" class="results-container"></div>
+  </div>
+
+  <script>
+    const API_URL = "https://dummyjson.com/products/search";
+    let debounceTimer = null;
+
+    const searchInput = document.getElementById("searchInput");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const statusMessage = document.getElementById("statusMessage");
+
+    function displayResults(items) {
+      resultsContainer.innerHTML = "";
+      const list = Array.isArray(items) ? items : (items.products || items.results || []);
+
+      if (!list || list.length === 0) {
+        statusMessage.textContent = "No matching records found.";
+        return;
+      }
+      statusMessage.textContent = "";
+
+      list.forEach(function(item) {
+        const itemCard = document.createElement("div");
+        itemCard.className = "result-card";
+
+        const title = document.createElement("h3");
+        title.textContent = item.title;
+
+        const details = document.createElement("p");
+        details.textContent = item.description || `Category: ${item.category} • Price: $${item.price}`;
+
+        itemCard.appendChild(title);
+        itemCard.appendChild(details);
+        resultsContainer.appendChild(itemCard);
+      });
+    }
+
+    async function fetchSearchResults(query) {
+      try {
+        statusMessage.textContent = "Searching...";
+        const response = await fetch(API_URL + "?q=" + encodeURIComponent(query));
+        if (!response.ok) {
+          throw new Error("Unable to retrieve search results.");
+        }
+        const data = await response.json();
+        displayResults(data);
+      } catch (error) {
+        resultsContainer.innerHTML = "";
+        statusMessage.textContent = error.message;
+      }
+    }
+
+    function handleLiveInput() {
+      clearTimeout(debounceTimer);
+      const query = searchInput.value.trim();
+      if (query === "") {
+        resultsContainer.innerHTML = "";
+        statusMessage.textContent = "";
+        return;
+      }
+      debounceTimer = setTimeout(function() {
+        fetchSearchResults(query);
+      }, 300);
+    }
+
+    searchInput.addEventListener("input", handleLiveInput);
+  </script>
+</body>
+</html>
