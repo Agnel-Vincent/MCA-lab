@@ -7,6 +7,6 @@ for i in numbers:
     if i == num:
         print(num, " is in the list")
         break
-    else:
-        print(num, " is not in the list")
-        break
+else:
+    print(num, " is not in the list")
+    
