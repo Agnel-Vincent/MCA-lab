@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Catalogue</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .controls input,
+    .controls select {
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .controls input {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .controls select {
+      min-width: 180px;
+      background-color: #fff;
+    }
+
+    .controls input:focus,
+    .controls select:focus {
+      border-color: #3498db;
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .product-card p {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #666;
+    }
+
+    .product-card .price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #27ae60;
+      margin-top: 8px;
+    }
+
+    .no-products {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Product Catalogue</h1>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search products by name...">
+      <select id="categoryFilter">
+        <option value="All">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Stationery">Stationery</option>
+      </select>
+    </div>
+
+    <div id="productContainer" class="product-container"></div>
+  </div>
+
+  <script>
+    const products = [
+      { name: "Laptop", price: 55000, category: "Electronics" },
+      { name: "Smartphone", price: 25000, category: "Electronics" },
+      { name: "Headphones", price: 2000, category: "Electronics" },
+      { name: "T-Shirt", price: 800, category: "Clothing" },
+      { name: "Jeans", price: 1500, category: "Clothing" },
+      { name: "Desk Chair", price: 6500, category: "Furniture" },
+      { name: "Coffee Table", price: 4000, category: "Furniture" },
+      { name: "Notebook", price: 120, category: "Stationery" }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const productContainer = document.getElementById("productContainer");
+
+    function displayProducts(productList) {
+      productContainer.innerHTML = "";
+      if (productList.length === 0) {
+        productContainer.innerHTML = '<p class="no-products">No matching products found.</p>';
+      } else {
+        productList.forEach(function(product) {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.innerHTML = `
+            <h3>${product.name}</h3>
+            <p><strong>Category:</strong> ${product.category}</p>
+            <p class="price">Price: ₹${product.price}</p>
+          `;
+          productContainer.appendChild(card);
+        });
+      }
+    }
+
+    function filterProducts() {
+      const searchQuery = searchInput.value.toLowerCase();
+      const selectedCategory = categoryFilter.value;
+      const filteredProducts = products.filter(function(product) {
+        const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+        const matchesSearch = product.name.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+      displayProducts(filteredProducts);
+    }
+
+    searchInput.addEventListener("input", filterProducts);
+    categoryFilter.addEventListener("change", filterProducts);
+    displayProducts(products);
+  </script>
+</body>
+</html>
