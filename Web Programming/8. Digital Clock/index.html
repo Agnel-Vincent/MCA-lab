@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clock and Calendar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap">
+<style>
+  :root {
+    --paper: #e8ecee;
+    --ink: #17252d;
+    --muted: #6b7b84;
+    --rule: #c3ccd1;
+    --signal: #1d4ed8;
+    --on-ink: #e8ecee;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12191d; --ink: #dfe6ea; --muted: #8696a0;
+      --rule: #2d3b43; --signal: #7da2ff; --on-ink: #12191d;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12191d; --ink: #dfe6ea; --muted: #8696a0;
+    --rule: #2d3b43; --signal: #7da2ff; --on-ink: #12191d;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Archivo", "Arial Narrow", Arial, sans-serif;
+    font-stretch: 100%;
+    line-height: 1.4;
+  }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 32px 64px;
+  }
+
+  /* ---------- Clock ---------- */
+  .date-line {
+    margin: 0;
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .time {
+    margin: 4px 0 0;
+    font-size: clamp(4.5rem, 20vw, 13rem);
+    font-weight: 700;
+    font-stretch: 70%;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .time .sec { color: var(--signal); }
+  .time .meridiem {
+    font-size: 0.22em;
+    font-weight: 500;
+    font-stretch: 100%;
+    letter-spacing: 0;
+    margin-left: 0.5em;
+    color: var(--muted);
+  }
+  .colon { padding: 0 0.04em; }
+
+  /* Sixty ticks: one per second */
+  .ticks {
+    display: grid;
+    grid-template-columns: repeat(60, 1fr);
+    gap: 0;
+    margin-top: 28px;
+    height: 28px;
+    align-items: end;
+  }
+  .ticks i {
+    display: block;
+    width: 1px;
+    height: 40%;
+    background: var(--rule);
+    justify-self: start;
+  }
+  .ticks i:nth-child(5n+1) { height: 70%; }
+  .ticks i.on { background: var(--signal); }
+  .ticks i.now { width: 3px; height: 100%; background: var(--signal); }
+
+  .controls { margin-top: 20px; }
+  button {
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    padding: 6px 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  button:hover { color: var(--signal); }
+  button:focus-visible, .cal td:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+  }
+  .controls button + button { margin-left: 24px; }
+
+  /* ---------- Calendar ---------- */
+  .calendar {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr minmax(320px, 520px);
+    gap: 32px 64px;
+    align-items: start;
+  }
+  .cal-head h2 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    font-stretch: 75%;
+    line-height: 1;
+  }
+  .cal-head p { margin: 8px 0 20px; color: var(--muted); }
+  .cal-nav button + button { margin-left: 20px; }
+
+  table.cal { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .cal th {
+    padding: 0 0 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-align: right;
+  }
+  .cal td {
+    padding: 4px 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.1rem;
+  }
+  .cal td span {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .cal td.sun { color: var(--muted); }
+  .cal td.today span { background: var(--ink); color: var(--on-ink); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    main { padding: 32px 20px 48px; }
+    .calendar { grid-template-columns: 1fr; margin-top: 48px; }
+    .ticks { height: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <section aria-label="Clock">
+    <p class="date-line" id="dateLine">&nbsp;</p>
+    <h1 class="time" id="time" aria-live="off">
+      <span id="hh">--</span><span class="colon">:</span><span id="mm">--</span><span class="colon">:</span><span class="sec" id="ss">--</span><span class="meridiem" id="mer"></span>
+    </h1>
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <div class="controls">
+      <button type="button" id="fmt">Switch to 24-hour</button>
+      <button type="button" id="theme">Switch theme</button>
+    </div>
+  </section>
+
+  <section class="calendar" aria-label="Calendar">
+    <div class="cal-head">
+      <h2 id="monthTitle"></h2>
+      <p id="monthSub"></p>
+      <div class="cal-nav">
+        <button type="button" id="prev">Previous month</button>
+        <button type="button" id="next">Next month</button>
+        <button type="button" id="todayBtn">Today</button>
+      </div>
+    </div>
+    <table class="cal" id="cal">
+      <thead>
+        <tr><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr>
+      </thead>
+      <tbody id="calBody"></tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  // ---------- State ----------
+  var use24h = false;
+  var now = new Date();
+  var viewYear = now.getFullYear();
+  var viewMonth = now.getMonth();
+
+  var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December"];
+
+  var el = function (id) { return document.getElementById(id); };
+  var pad = function (n) { return n < 10 ? "0" + n : "" + n; };
+
+  // ---------- Build the 60 ticks once ----------
+  var tickEls = [];
+  (function () {
+    var box = el("ticks");
+    for (var i = 0; i < 60; i++) {
+      var t = document.createElement("i");
+      box.appendChild(t);
+      tickEls.push(t);
+    }
+  })();
+
+  // ---------- Clock: runs every second via setInterval ----------
+  function updateClock() {
+    var d = new Date();
+    var h = d.getHours();
+    var mer = "";
+    if (!use24h) {
+      mer = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+    }
+    el("hh").textContent = pad(h);
+    el("mm").textContent = pad(d.getMinutes());
+    el("ss").textContent = pad(d.getSeconds());
+    el("mer").textContent = mer;
+
+    el("dateLine").textContent =
+      DAYS[d.getDay()] + ", " + d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+
+    var s = d.getSeconds();
+    for (var i = 0; i < 60; i++) {
+      tickEls[i].className = i < s ? "on" : (i === s ? "now" : "");
+    }
+
+    // Keep "today" correct if midnight passes while the page is open
+    if (d.getDate() !== now.getDate()) { now = d; renderCalendar(); }
+  }
+
+  // ---------- Calendar ----------
+  function renderCalendar() {
+    var first = new Date(viewYear, viewMonth, 1);
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var offset = (first.getDay() + 6) % 7; // Monday = 0
+
+    el("monthTitle").textContent = MONTHS[viewMonth];
+    el("monthSub").textContent = viewYear + ", " + daysInMonth + " days";
+
+    var body = el("calBody");
+    body.innerHTML = "";
+    var day = 1;
+    var rows = Math.ceil((offset + daysInMonth) / 7);
+
+    for (var r = 0; r < rows; r++) {
+      var tr = document.createElement("tr");
+      for (var c = 0; c < 7; c++) {
+        var td = document.createElement("td");
+        var index = r * 7 + c;
+        if (index >= offset && day <= daysInMonth) {
+          var span = document.createElement("span");
+          span.textContent = day;
+          td.appendChild(span);
+          if (c === 6) td.className = "sun";
+          if (day === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear()) {
+            td.className += " today";
+            td.setAttribute("aria-current", "date");
+          }
+          day++;
+        }
+        tr.appendChild(td);
+      }
+      body.appendChild(tr);
+    }
+  }
+
+  function shiftMonth(delta) {
+    viewMonth += delta;
+    if (viewMonth < 0)  { viewMonth = 11; viewYear--; }
+    if (viewMonth > 11) { viewMonth = 0;  viewYear++; }
+    renderCalendar();
+  }
+
+  // ---------- Events ----------
+  el("prev").addEventListener("click", function () { shiftMonth(-1); });
+  el("next").addEventListener("click", function () { shiftMonth(1); });
+  el("todayBtn").addEventListener("click", function () {
+    now = new Date();
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+    renderCalendar();
+  });
+  el("fmt").addEventListener("click", function () {
+    use24h = !use24h;
+    this.textContent = use24h ? "Switch to 12-hour" : "Switch to 24-hour";
+    updateClock();
+  });
+  el("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  // ---------- Start ----------
+  updateClock();
+  renderCalendar();
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
