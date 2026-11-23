@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6fa;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    .forms-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .form-card {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-card h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #3498db;
+    }
+
+    input.error {
+      border-color: #e74c3c;
+    }
+
+    .error-msg {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+      min-height: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 11px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #3498db;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Form Validation</h1>
+
+    <div class="forms-wrapper">
+      <div class="form-card">
+        <h2>Registration Form</h2>
+        <form id="regForm">
+          <div class="form-group">
+            <label for="regName">Name</label>
+            <input type="text" id="regName" placeholder="Enter your name">
+            <div id="regNameError" class="error-msg"></div>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input type="text" id="regEmail" placeholder="Enter your email">
+            <div id="regEmailError" class="error-msg"></div>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" placeholder="Enter your password">
+            <div id="regPasswordError" class="error-msg"></div>
+          </div>
+          <button type="submit">Register</button>
+        </form>
+      </div>
+
+      <div class="form-card">
+        <h2>Login Form</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="text" id="loginEmail" placeholder="Enter your email">
+            <div id="loginEmailError" class="error-msg"></div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password">
+            <div id="loginPasswordError" class="error-msg"></div>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const regForm = document.getElementById("regForm");
+    const loginForm = document.getElementById("loginForm");
+    const regName = document.getElementById("regName");
+    const regEmail = document.getElementById("regEmail");
+    const regPassword = document.getElementById("regPassword");
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+
+    const regNameError = document.getElementById("regNameError");
+    const regEmailError = document.getElementById("regEmailError");
+    const regPasswordError = document.getElementById("regPasswordError");
+    const loginEmailError = document.getElementById("loginEmailError");
+    const loginPasswordError = document.getElementById("loginPasswordError");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    function showError(inputField, errorElement, message) {
+      errorElement.textContent = message;
+      inputField.classList.add("error");
+    }
+
+    function clearError(inputField, errorElement) {
+      errorElement.textContent = "";
+      inputField.classList.remove("error");
+    }
+
+    function validateRequired(inputField, errorElement, fieldName) {
+      const value = inputField.value.trim();
+      if (value === "") {
+        showError(inputField, errorElement, fieldName + " is required.");
+        return false;
+      } else {
+        clearError(inputField, errorElement);
+        return true;
+      }
+    }
+
+    function validateEmail(emailField, errorElement) {
+      if (!validateRequired(emailField, errorElement, "Email")) {
+        return false;
+      }
+      if (!emailRegex.test(emailField.value.trim())) {
+        showError(emailField, errorElement, "Enter a valid email address.");
+        return false;
+      } else {
+        clearError(emailField, errorElement);
+        return true;
+      }
+    }
+
+    function validatePassword(passwordField, errorElement, checkStrength) {
+      if (!validateRequired(passwordField, errorElement, "Password")) {
+        return false;
+      }
+      if (checkStrength && !passwordRegex.test(passwordField.value)) {
+        showError(passwordField, errorElement, "Password must be at least 8 characters with uppercase, lowercase, and a number.");
+        return false;
+      } else {
+        clearError(passwordField, errorElement);
+        return true;
+      }
+    }
+
+    regName.addEventListener("input", function() {
+      validateRequired(regName, regNameError, "Name");
+    });
+
+    regEmail.addEventListener("input", function() {
+      validateEmail(regEmail, regEmailError);
+    });
+
+    regPassword.addEventListener("input", function() {
+      validatePassword(regPassword, regPasswordError, true);
+    });
+
+    loginEmail.addEventListener("input", function() {
+      validateEmail(loginEmail, loginEmailError);
+    });
+
+    loginPassword.addEventListener("input", function() {
+      validatePassword(loginPassword, loginPasswordError, false);
+    });
+
+    if (regForm) {
+      regForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const isNameValid = validateRequired(regName, regNameError, "Name");
+        const isEmailValid = validateEmail(regEmail, regEmailError);
+        const isPasswordValid = validatePassword(regPassword, regPasswordError, true);
+        if (isNameValid && isEmailValid && isPasswordValid) {
+          alert("Registration successful!");
+          regForm.reset();
+        }
+      });
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const isEmailValid = validateEmail(loginEmail, loginEmailError);
+        const isPasswordValid = validatePassword(loginPassword, loginPasswordError, false);
+        if (isEmailValid && isPasswordValid) {
+          alert("Login successful!");
+          loginForm.reset();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
